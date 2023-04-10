@@ -38,8 +38,8 @@ export async function uploadAssets(releaseId: number, owner: string, repo: strin
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
       await github.rest.repos.deleteReleaseAsset({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
+        owner: owner || context.repo.owner,
+        repo: repo || context.repo.repo,
         asset_id: existingAsset.id,
       });
     }

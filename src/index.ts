@@ -116,7 +116,9 @@ async function run(): Promise<void> {
         body,
         commitish || undefined,
         draft,
-        prerelease
+        prerelease,
+        owner,
+        repo,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);

@@ -58,8 +58,8 @@ export async function uploadVersionJSON({
   };
 
   const assets = await github.rest.repos.listReleaseAssets({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+    owner: owner || context.repo.owner,
+    repo: repo || context.repo.repo,
     release_id: releaseId,
     per_page: 50,
   });
@@ -70,8 +70,8 @@ export async function uploadVersionJSON({
       await github.request(
         'GET /repos/{owner}/{repo}/releases/assets/{asset_id}',
         {
-          owner: context.repo.owner,
-          repo: context.repo.repo,
+          owner: owner || context.repo.owner,
+          repo: repo || context.repo.repo,
           asset_id: asset.id,
           headers: {
             accept: 'application/octet-stream',
@@ -130,8 +130,8 @@ export async function uploadVersionJSON({
     if (asset) {
       // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
       await github.rest.repos.deleteReleaseAsset({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
+        owner: owner || context.repo.owner,
+        repo: repo || context.repo.repo,
         release_id: releaseId,
         asset_id: asset.id,
       });

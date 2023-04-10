@@ -32,7 +32,9 @@ export async function createRelease(
   body?: string,
   commitish?: string,
   draft = true,
-  prerelease = true
+  prerelease = true,
+  owner?: string,
+  repo?: string,
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -40,9 +42,6 @@ export async function createRelease(
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
   const github = getOctokit(process.env.GITHUB_TOKEN);
-
-  // Get owner and repo from context of payload that triggered the action
-  const { owner, repo } = context.repo;
 
   const bodyPath = core.getInput('body_path', { required: false });
   let bodyFileContent: string | null = null;
@@ -78,8 +77,8 @@ export async function createRelease(
       }
     } else {
       const foundRelease = await github.rest.repos.getReleaseByTag({
-        owner,
-        repo,
+        owner: owner || context.repo.owner,
+        repo: repo || context.repo.repo,
         tag: tagName,
       });
       release = foundRelease.data;
@@ -90,8 +89,8 @@ export async function createRelease(
     if (error.status === 404 || error.message === 'release not found') {
       console.log(`Couldn't find release with tag ${tagName}. Creating one.`);
       const createdRelease = await github.rest.repos.createRelease({
-        owner,
-        repo,
+        owner: owner || context.repo.owner,
+        repo: repo || context.repo.repo,
         tag_name: tagName,
         name: releaseName,
         body: bodyFileContent || body,
