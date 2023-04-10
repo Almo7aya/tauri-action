@@ -6,6 +6,10 @@ author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
   releaseId:
     description: 'The id of the release to upload artifacts as release assets'
+  repo:
+    description: 'The name of the releases repository'
+  owner:
+    description: 'The username or organization of the releases repository'
   tagName:
     description: 'The tag name of the release to create'
   releaseName:

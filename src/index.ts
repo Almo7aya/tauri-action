@@ -39,6 +39,8 @@ async function run(): Promise<void> {
     const draft = core.getBooleanInput('releaseDraft');
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
+    const repo = core.getInput('repo');
+    const owner = core.getInput('owner');
 
     if (!releaseId) {
       if (Boolean(tagName) !== Boolean(releaseName)) {
@@ -148,13 +150,15 @@ async function run(): Promise<void> {
         }
       }
 
-      await uploadReleaseAssets(releaseId, artifacts);
+      await uploadReleaseAssets(releaseId, owner, repo, artifacts);
 
       if (includeUpdaterJson) {
         await uploadVersionJSON({
           version: info.version,
           notes: body,
           tagName,
+          owner,
+          repo,
           releaseId,
           artifacts,
           targetInfo,

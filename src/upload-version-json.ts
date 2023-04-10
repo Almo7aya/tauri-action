@@ -28,12 +28,16 @@ export async function uploadVersionJSON({
   notes,
   tagName,
   releaseId,
+  owner,
+  repo,
   artifacts,
   targetInfo,
 }: {
   version: string;
   notes: string;
   tagName: string;
+  owner: string;
+  repo: string;
   releaseId: number;
   artifacts: Artifact[];
   targetInfo: TargetInfo;
@@ -134,7 +138,7 @@ export async function uploadVersionJSON({
     }
 
     console.log(`Uploading ${versionFile}...`);
-    await uploadAssets(releaseId, [{ path: versionFile, arch: '' }]);
+    await uploadAssets(releaseId, owner, repo, [{ path: versionFile, arch: '' }]);
   } else {
     const missing = downloadUrl
       ? 'Signature'
